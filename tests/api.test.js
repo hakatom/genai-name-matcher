@@ -33,8 +33,48 @@ describe('API Endpoints', () => {
             .post('/api/match')
             .send({});
 
-        // Should return empty/false match, but 200 OK
-        expect(res.statusCode).toEqual(200);
+        // Should return 400 Bad Request for missing required fields
+        expect(res.statusCode).toEqual(400);
         expect(res.body).toHaveProperty('match', false);
+        expect(res.body).toHaveProperty('score', 0);
+        expect(res.body).toHaveProperty('error');
+    });
+
+    test('POST /api/match should handle whitespace-only names', async () => {
+        const res = await request(app)
+            .post('/api/match')
+            .send({
+                name1: '   ',
+                name2: 'John Doe'
+            });
+
+        expect(res.statusCode).toEqual(400);
+        expect(res.body).toHaveProperty('match', false);
+        expect(res.body).toHaveProperty('score', 0);
+        expect(res.body).toHaveProperty('error');
+    });
+
+    test('POST /api/match should handle only name1 missing', async () => {
+        const res = await request(app)
+            .post('/api/match')
+            .send({
+                name2: 'John Doe'
+            });
+
+        expect(res.statusCode).toEqual(400);
+        expect(res.body).toHaveProperty('match', false);
+        expect(res.body).toHaveProperty('score', 0);
+    });
+
+    test('POST /api/match should handle only name2 missing', async () => {
+        const res = await request(app)
+            .post('/api/match')
+            .send({
+                name1: 'John Doe'
+            });
+
+        expect(res.statusCode).toEqual(400);
+        expect(res.body).toHaveProperty('match', false);
+        expect(res.body).toHaveProperty('score', 0);
     });
 });

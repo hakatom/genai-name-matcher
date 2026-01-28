@@ -12,6 +12,16 @@ app.use(express.static('.'));
 app.post('/api/match', (req, res) => {
     try {
         const { name1, name2 } = req.body;
+        
+        // Validate input
+        if (!name1 || !name2 || name1.trim() === '' || name2.trim() === '') {
+            return res.status(400).json({ 
+                error: "Both name1 and name2 are required and cannot be empty",
+                match: false,
+                score: 0
+            });
+        }
+        
         console.log(`Matching: "${name1}" vs "${name2}"`);
         const result = compareNames(name1, name2);
         console.log("Result:", result);

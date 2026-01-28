@@ -4,7 +4,12 @@ const jaroWinkler = require('talisman/metrics/jaro-winkler');
 // Common suffixes to ignore (noise)
 const SUFFIXES = new Set(['jr', 'sr', 'ii', 'iii', 'iv', 'v']);
 
-// Tokenize and clean name
+/**
+ * Tokenize and clean a name string.
+ * Converts to lowercase, removes non-alphabetic characters, and filters out common suffixes.
+ * @param {string} name - The name to process
+ * @returns {Array<string>} Array of cleaned name tokens
+ */
 function processName(name) {
     if (!name) return [];
     // Replace non-alpha characters with spaces
@@ -15,7 +20,12 @@ function processName(name) {
     return tokens;
 }
 
-// Calculate match score between two tokens
+/**
+ * Calculate match score between two name tokens using Jaro-Winkler distance and phonetic matching.
+ * @param {string} token1 - First token to compare
+ * @param {string} token2 - Second token to compare
+ * @returns {number} Match score between 0 and 1
+ */
 function getTokenScore(token1, token2) {
     if (token1 === token2) return 1.0;
 
@@ -56,7 +66,19 @@ function getTokenScore(token1, token2) {
     }
 }
 
-// Global Name Match comparison
+/**
+ * Compare two names to determine if they refer to the same person.
+ * Uses token matching, phonetic algorithms, and string distance metrics.
+ * @param {string} name1 - First name to compare
+ * @param {string} name2 - Second name to compare
+ * @returns {Object} Result object with match status, score, and details
+ * @returns {boolean} returns.match - Whether names match (score >= threshold)
+ * @returns {number} returns.score - Match confidence score (0-1)
+ * @returns {Array<string>} [returns.tokens1] - Processed tokens from name1 (if valid)
+ * @returns {Array<string>} [returns.tokens2] - Processed tokens from name2 (if valid)
+ * @returns {Array<string>} [returns.details] - Detailed match information (if valid)
+ * @returns {string} [returns.reason] - Reason for failure (if names are empty)
+ */
 function compareNames(name1, name2) {
     let tokens1 = processName(name1);
     let tokens2 = processName(name2);
