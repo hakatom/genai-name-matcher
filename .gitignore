@@ -3,3 +3,5 @@ node_modules/
 .env
 npm-debug.log
 coverage/
+test_output.txt
+test_results*.json

@@ -1,0 +1,188 @@
+[
+    {
+        "category": "Exact Match",
+        "name1": "John Doe",
+        "name2": "John Doe",
+        "expectedMatch": true
+    },
+    {
+        "category": "Transposition",
+        "name1": "John Doe",
+        "name2": "Doe, John",
+        "expectedMatch": true
+    },
+    {
+        "category": "Transposition",
+        "name1": "Wei Zhang",
+        "name2": "Zhang Wei",
+        "expectedMatch": true
+    },
+    {
+        "category": "Case Sensitivity",
+        "name1": "albert einstein",
+        "name2": "Albert Einstein",
+        "expectedMatch": true
+    },
+    {
+        "category": "Phonetic (English)",
+        "name1": "Michael",
+        "name2": "Micheal",
+        "expectedMatch": true
+    },
+    {
+        "category": "Phonetic (English)",
+        "name1": "Stephen",
+        "name2": "Steven",
+        "expectedMatch": true
+    },
+    {
+        "category": "Phonetic (English)",
+        "name1": "Smith",
+        "name2": "Smyth",
+        "expectedMatch": true
+    },
+    {
+        "category": "Arabic",
+        "name1": "Mohammad",
+        "name2": "Mohamed",
+        "expectedMatch": true
+    },
+    {
+        "category": "Arabic",
+        "name1": "Hassan",
+        "name2": "Hasan",
+        "expectedMatch": true
+    },
+    {
+        "category": "Arabic",
+        "name1": "Abdullah",
+        "name2": "Abdallah",
+        "expectedMatch": true
+    },
+    {
+        "category": "Arabic - Transliteration",
+        "name1": "Gaddafi",
+        "name2": "Qaddafi",
+        "expectedMatch": true
+    },
+    {
+        "category": "Hebrew",
+        "name1": "Cohen",
+        "name2": "Kohen",
+        "expectedMatch": true
+    },
+    {
+        "category": "Hebrew",
+        "name1": "Yael",
+        "name2": "Ya'el",
+        "expectedMatch": true
+    },
+    {
+        "category": "Hebrew",
+        "name1": "Rachael",
+        "name2": "Rachel",
+        "expectedMatch": true
+    },
+    {
+        "category": "Russian/Slavic",
+        "name1": "Dmitry",
+        "name2": "Dmitri",
+        "expectedMatch": true
+    },
+    {
+        "category": "Russian/Slavic",
+        "name1": "Pyotr",
+        "name2": "Peter",
+        "expectedMatch": false
+    },
+    {
+        "category": "Russian/Slavic",
+        "name1": "Tchaikovsky",
+        "name2": "Chaikovsky",
+        "expectedMatch": true
+    },
+    {
+        "category": "Hispanic - Compound",
+        "name1": "Gabriel Garcia Marquez",
+        "name2": "Gabriel Garcia-Marquez",
+        "expectedMatch": true
+    },
+    {
+        "category": "Hispanic - Transposition",
+        "name1": "Maria Rodriguez",
+        "name2": "Rodriguez, Maria",
+        "expectedMatch": true
+    },
+    {
+        "category": "Asian (Korean)",
+        "name1": "Park Ji-sung",
+        "name2": "Ji-sung Park",
+        "expectedMatch": true
+    },
+    {
+        "category": "Asian (Chinese)",
+        "name1": "Mao Zedong",
+        "name2": "Tse-tung, Mao",
+        "expectedMatch": false
+    },
+    {
+        "category": "Compound/Hyphen",
+        "name1": "Jean-Luc",
+        "name2": "Jean Luc",
+        "expectedMatch": true
+    },
+    {
+        "category": "Compound/Hyphen",
+        "name1": "Mary-Kate",
+        "name2": "Mary Kate",
+        "expectedMatch": true
+    },
+    {
+        "category": "Indian",
+        "name1": "Priyanka Chopra",
+        "name2": "Chopra, Priyanka",
+        "expectedMatch": true
+    },
+    {
+        "category": "Indian",
+        "name1": "Sourav Ganguly",
+        "name2": "Saurav Ganguly",
+        "expectedMatch": true
+    },
+    {
+        "category": "Loose Match - Partial",
+        "name1": "Robert Downey Jr",
+        "name2": "Robert Downey",
+        "expectedMatch": true
+    },
+    {
+        "category": "Negative - Simple",
+        "name1": "John Doe",
+        "name2": "Jane Doe",
+        "expectedMatch": false
+    },
+    {
+        "category": "Negative - Sibling",
+        "name1": "Serena Williams",
+        "name2": "Venus Williams",
+        "expectedMatch": false
+    },
+    {
+        "category": "Negative - Distinct",
+        "name1": "Barack Obama",
+        "name2": "Donald Trump",
+        "expectedMatch": false
+    },
+    {
+        "category": "Negative - Similar Beginning",
+        "name1": "Davids",
+        "name2": "Davis",
+        "expectedMatch": false
+    },
+    {
+        "category": "Negative - Similar but different",
+        "name1": "Mario",
+        "name2": "Maria",
+        "expectedMatch": false
+    }
+]

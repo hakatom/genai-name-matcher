@@ -1,15 +1,18 @@
 const doubleMetaphone = require('talisman/phonetics/double-metaphone');
 const jaroWinkler = require('talisman/metrics/jaro-winkler');
 
+// Common suffixes to ignore (noise)
+const SUFFIXES = new Set(['jr', 'sr', 'ii', 'iii', 'iv', 'v']);
+
 // Tokenize and clean name
 function processName(name) {
     if (!name) return [];
-    // Replace non-alpha characters with spaces to handle hyphens as separators
-    // "El-Vaida" -> "El Vaida" -> ["el", "vaida"]
-    return name.toString().toLowerCase()
+    // Replace non-alpha characters with spaces
+    const tokens = name.toString().toLowerCase()
         .replace(/[^a-z\s]/g, ' ')
         .split(/\s+/)
-        .filter(Boolean);
+        .filter(t => t && !SUFFIXES.has(t)); // Filter suffixes
+    return tokens;
 }
 
 // Calculate match score between two tokens
@@ -17,7 +20,18 @@ function getTokenScore(token1, token2) {
     if (token1 === token2) return 1.0;
 
     // Jaro-Winkler Distance
-    const jw = jaroWinkler(token1, token2);
+    let jw = jaroWinkler(token1, token2);
+
+    // Penalize short names with different endings (Mario vs Maria)
+    // If length <= 5 and last char differs, penalty.
+    if (token1.length <= 5 && token2.length <= 5) {
+        if (token1[token1.length - 1] !== token2[token2.length - 1]) {
+            jw *= 0.8; // Reduce score by 20%
+        }
+    }
+
+    // Penalize "Davis" vs "Davids" (Length differ by 1, ends with s)
+    // High JW but distinct.
 
     // Phonetic Match
     const codes1 = doubleMetaphone(token1);
@@ -33,10 +47,12 @@ function getTokenScore(token1, token2) {
 
     if (phoneticMatch) {
         // Lowered phonetic weight to avoid John/Jane false positives
-        // John/Jane: Phonetic=1, JW=~0.65 -> 0.3 + 0.455 = 0.755 (No interaction)
+        // Boost if JW is also high
+        if (jw > 0.9) return jw; // Strong match
         return (0.3 * 1.0) + (0.7 * jw);
     } else {
-        return jw;
+        // If phonetically different, penalize JW score to avoid "Davids" vs "Davis"
+        return jw * 0.9;
     }
 }
 
@@ -69,8 +85,6 @@ function compareNames(name1, name2) {
 
     // Apply strict greedy matching first
     for (const pair of allPairs) {
-        // Only accept VERY good matches for the first pass (e.g. Exact or near exact)
-        // This allows compound matching to catch "Elvaida" vs "El" + "Vaida"
         if (!matchedIndices1.has(pair.i) && !matchedIndices2.has(pair.j)) {
             if (pair.score > 0.92) {
                 matchedIndices1.add(pair.i);
@@ -83,7 +97,6 @@ function compareNames(name1, name2) {
     }
 
     // Phase 2: Compound Matching (Concatenation)
-
     const tryCompoundMatching = (sourceTokens, targetTokens, matchedSource, matchedTarget) => {
         for (let i = 0; i < sourceTokens.length - 1; i++) {
             if (matchedSource.has(i)) continue;
@@ -101,7 +114,11 @@ function compareNames(name1, name2) {
                     if (score > 0.90) { // Strict compound match
                         for (let m = i; m <= k; m++) matchedSource.add(m);
                         matchedTarget.add(j);
-                        totalScore += score;
+                        // Adjust score weight for compound match (Many-to-One)
+                        // If we matched 2 tokens to 1, factor is (2+1)/2 = 1.5
+                        const sourceCount = k - i + 1;
+                        const weightFactor = (sourceCount + 1) / 2;
+                        totalScore += score * weightFactor;
                         matchesFound++;
                         details.push(`[${sourceTokens.slice(i, k + 1).join('+')}] <-> ${targetTokens[j]} (${score.toFixed(2)})`);
                         return true;
@@ -118,7 +135,6 @@ function compareNames(name1, name2) {
     // Final Cleanup: Loose matching for remaining
     for (const pair of allPairs) {
         if (!matchedIndices1.has(pair.i) && !matchedIndices2.has(pair.j)) {
-            // Lower threshold for leftovers, but strict enough to reject John/Jane
             if (pair.score > 0.85) {
                 matchedIndices1.add(pair.i);
                 matchedIndices2.add(pair.j);
@@ -129,13 +145,12 @@ function compareNames(name1, name2) {
         }
     }
 
-    // Simple approach: Average coverage.
-    const coverage1 = matchedIndices1.size / tokens1.length;
-    const coverage2 = matchedIndices2.size / tokens2.length;
+    // Weighted coverage approach
+    // (Sum of scores * 2) / (Total tokens in both names)
+    // This ensures that weak matches (e.g. 0.87) count as 0.87, not 1.0
+    const finalScore = (totalScore * 2) / (tokens1.length + tokens2.length);
 
-    const finalScore = (coverage1 + coverage2) / 2;
-
-    const threshold = 0.90; // 90% coverage required
+    const threshold = 0.88;
     const match = finalScore >= threshold;
 
     return {
