@@ -26,9 +26,13 @@ form.addEventListener('submit', async (e) => {
             body: JSON.stringify({ name1, name2 })
         });
 
-        if (!response.ok) throw new Error('Network response was not ok');
-
         const data = await response.json();
+        
+        if (!response.ok) {
+            // Display server error message if available
+            throw new Error(data.error || 'Network response was not ok');
+        }
+
         displayResult(data);
     } catch (error) {
         console.error('Error:', error);
@@ -37,7 +41,7 @@ form.addEventListener('submit', async (e) => {
         matchStatus.textContent = "Connection Error";
         matchStatus.style.color = "#EF4444";
         scoreBadge.textContent = "Error";
-        analysisList.innerHTML = '<li>Unable to connect to the server. Please ensure the server is running on port 3000.</li>';
+        analysisList.innerHTML = `<li>${error.message || 'Unable to connect to the server. Please ensure the server is running on port 3000.'}</li>`;
     } finally {
         setLoading(false);
     }

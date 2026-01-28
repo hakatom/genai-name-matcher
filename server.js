@@ -14,9 +14,9 @@ app.post('/api/match', (req, res) => {
         const { name1, name2 } = req.body;
         
         // Validate input
-        if (!name1 || !name2) {
+        if (!name1 || !name2 || name1.trim() === '' || name2.trim() === '') {
             return res.status(400).json({ 
-                error: "Both name1 and name2 are required",
+                error: "Both name1 and name2 are required and cannot be empty",
                 match: false,
                 score: 0
             });

@@ -74,9 +74,10 @@ function getTokenScore(token1, token2) {
  * @returns {Object} Result object with match status, score, and details
  * @returns {boolean} returns.match - Whether names match (score >= threshold)
  * @returns {number} returns.score - Match confidence score (0-1)
- * @returns {Array<string>} returns.tokens1 - Processed tokens from name1
- * @returns {Array<string>} returns.tokens2 - Processed tokens from name2
- * @returns {Array<string>} returns.details - Detailed match information
+ * @returns {Array<string>} [returns.tokens1] - Processed tokens from name1 (if valid)
+ * @returns {Array<string>} [returns.tokens2] - Processed tokens from name2 (if valid)
+ * @returns {Array<string>} [returns.details] - Detailed match information (if valid)
+ * @returns {string} [returns.reason] - Reason for failure (if names are empty)
  */
 function compareNames(name1, name2) {
     let tokens1 = processName(name1);
