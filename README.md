@@ -19,7 +19,7 @@ A heuristic name matching application that uses phonetic and distance algorithms
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
+- Node.js (v18 or higher)
 - npm
 
 ### Installation
