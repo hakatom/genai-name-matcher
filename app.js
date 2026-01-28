@@ -19,7 +19,8 @@ form.addEventListener('submit', async (e) => {
     const name2 = document.getElementById('name2').value;
 
     try {
-        const response = await fetch('http://localhost:3000/api/match', {
+        // Use relative URL to work in both development and production
+        const response = await fetch('/api/match', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name1, name2 })
@@ -31,7 +32,12 @@ form.addEventListener('submit', async (e) => {
         displayResult(data);
     } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred while matching names. Please ensure the server is running.');
+        // Display user-friendly error message
+        resultArea.classList.remove('hidden');
+        matchStatus.textContent = "Connection Error";
+        matchStatus.style.color = "#EF4444";
+        scoreBadge.textContent = "Error";
+        analysisList.innerHTML = '<li>Unable to connect to the server. Please ensure the server is running on port 3000.</li>';
     } finally {
         setLoading(false);
     }

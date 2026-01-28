@@ -11,11 +11,11 @@
     <div class="container">
         <header>
             <h1>Name Matcher</h1>
-            <p>Heuristic matching with Phoneitc & Distance algorithms</p>
+            <p>Heuristic matching with Phonetic & Distance algorithms</p>
         </header>
         
         <main class="card">
-            <form id="nameForm">
+            <form id="nameForm" aria-label="Name matching form">
                 <div class="input-group">
                     <label for="name1">First Name</label>
                     <input type="text" id="name1" name="name1" placeholder="e.g. John Doe" required>
@@ -32,7 +32,7 @@
                 </button>
             </form>
 
-            <div id="resultArea" class="hidden">
+            <div id="resultArea" class="hidden" role="region" aria-live="polite" aria-label="Match results">
                 <div class="result-header">
                     <h2 id="matchStatus">Match Found</h2>
                     <span id="scoreBadge">95%</span>

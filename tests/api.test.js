@@ -33,8 +33,9 @@ describe('API Endpoints', () => {
             .post('/api/match')
             .send({});
 
-        // Should return empty/false match, but 200 OK
-        expect(res.statusCode).toEqual(200);
+        // Should return 400 Bad Request for missing required fields
+        expect(res.statusCode).toEqual(400);
         expect(res.body).toHaveProperty('match', false);
+        expect(res.body).toHaveProperty('error');
     });
 });
